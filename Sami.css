@@ -1,0 +1,266 @@
+Saltar al contenido
+Ethereum
+fondo de clr
+Navegación del repositorio
+Código
+Asuntos
+9
+ ( 9 )
+Solicitudes de extracción
+7
+ ( 7 )
+Comportamiento
+Proyectos
+Seguridad
+Perspectivas
+
+No puedes realizar esa acción en este momento. 
+Avatar del propietario
+fondo de clr
+Público
+Bifurcado de clrfund/monorepo
+ethereum/clrfund
+Esta rama tiene un retraso de 1568 commits. clrfund/monorepo:desarrollo.
+Nombre		
+samamammin
+samamammin
+Combinar la solicitud de extracción n.° 510 de ethereum/google-sheet-by-title
+9b2e10f
+ · 
+hace 4 años
+.fornido
+Cambie check-format a test:format para mayor coherencia.
+hace 5 años
+.vscode
+Agregar Vetur como recomendación de VS Code
+hace 5 años
+contratos
+Actualizar los scripts para admitir circuitos de producción con un tamaño de lote de 16 ( #508 )
+hace 4 años
+documentos
+Fusionar la solicitud de extracción n.° 460 de ethereum/arbitrum-deployment
+hace 5 años
+subgrafo
+agregar configuraciones para la implementación de arbitraje
+hace 5 años
+aplicación Vue
+Seleccione la hoja de cálculo por nombre.
+hace 4 años
+.editorconfig
+Varios: Agregar configuración del editor
+hace 6 años
+.gitignore
+agregar .netlify a .gitignore
+hace 5 años
+.prettierignore
+ignorar archivos generados
+hace 5 años
+.prettierrc
+ejecutar pruebas en pre push
+hace 5 años
+CONTRIBUYENDO.md
+Añade enlaces de Discord, Discourse y Telegram.
+hace 5 años
+LICENCIA
+Varios: Agregar archivo de licencia
+hace 6 años
+LÉAME.md
+agregar documentación de despliegue
+hace 5 años
+codegen.yml
+Corregir la URL del esquema de generación de código
+hace 5 años
+paquete.json
+Corregir inicio:dev
+hace 5 años
+bloqueo de hilo
+generar diferentes archivos yml de subgrafos según la selección de red
+hace 5 años
+Navegación de archivos del repositorio
+LÉAME
+Contribuyendo
+Licencia GPL-3.0
+fondo clr.
+clr.fund es un protocolo de financiación cuadrática sin permisos y con mínima dependencia de la confianza . Utiliza una infraestructura mínima anti-colusión ( MACI ) para protegerse contra diversas formas de soborno y colusión mediante el uso de zk-SNARKs . Para protegerse contra ataques Sybil , puede utilizar BrightID o un sistema de identidad similar.
+
+clr.fund lleva a cabo una secuencia continua de rondas de financiación cuadrática, donde cualquier persona puede añadir proyectos de interés público como beneficiarios, aportar fondos al fondo de contrapartida y contribuir con fondos a beneficiarios individuales. Para garantizar que solo se añadan proyectos de interés público como beneficiarios, clr.fund puede utilizar mecanismos de selección como Kleros Curate .
+
+Aunque clr.fund pretende ser independiente de la fuente de los fondos de contrapartida, su objetivo específico es permitir contribuciones de las siguientes fuentes:
+
+Recompensas del protocolo Ethereum (recompensas por bloque, impuestos por transacción, etc.)
+Benefactores conocidos y anónimos
+Protocolos benevolentes (MakerDAO, Burn Signal, etc.)
+Para que sus contribuciones se tengan en cuenta para la búsqueda de coincidencias, los contribuyentes deben verificar su singularidad.
+
+Los contratos inteligentes de clr.fund constan de un contrato de fábrica que implementa un nuevo contrato para cada ronda. Todos los fondos de contrapartida se envían al contrato de fábrica, mientras que los fondos de contribución se envían al contrato de la ronda actual. Hay cuatro roles en el contrato de fábrica:
+
+Propietario: Esta dirección (inicialmente configurada para el implementador) puede establecer la dirección del coordinador, finalizar una ronda transfiriendo fondos coincidentes al contrato de la ronda actual y establecer el token y la duración de la ronda.
+Coordinador: Esta dirección es responsable de ejecutar el cálculo zk-SNARK sobre las contribuciones para generar los porcentajes relativos de fondos de contrapartida que cada beneficiario debería recibir. El coordinador puede renunciar en cualquier momento, lo que invalida la ronda actual y obliga al propietario a iniciar una nueva ronda y a los usuarios a enviar nuevos mensajes MACI para sus contribuciones. Sin algún avance en el cálculo automático, este coordinador es necesariamente una parte de confianza en este sistema (esto se analiza con más detalle en la sección Limitaciones).
+Contribuyente: Cualquier dirección que aporte tokens a la ronda de financiación.
+Destinatario: Cualquier dirección registrada como receptora de fondos.
+La aplicación clr.fund puede usar cualquier cadena compatible con EVM como backend. La aplicación puede alojarse en IPFS y también ejecutarse localmente.
+
+Para obtener más detalles, consulte el diagrama de secuencia y la constitución de clr.fund .
+
+Algunos artículos de blog útiles para explicar el proyecto clr.fund:
+
+https://blog.clr.fund/clr-fund-explained-pt-1/
+https://blog.clr.fund/clr-fund-explained-pt-2/
+https://blog.clr.fund/clr-fund-explained-pt-3/
+Limitaciones
+Nuestro diseño actual presenta varias limitaciones; aquí analizamos algunas de ellas.
+
+Participantes de confianza
+La necesidad de contar con varias partes de confianza es la principal limitación del diseño actual. El propietario podría, y probablemente será, reemplazado por una DAO u otro mecanismo de toma de decisiones que podría mitigar la preocupación por la confianza en este rol.
+
+Sin embargo, a falta de algún avance significativo en la computación ciega, los cálculos de zk-SNARK deben ser realizados necesariamente por alguna parte de confianza que se convierte en un objetivo principal para el soborno, ya que es el único participante que puede conocer los detalles de las contribuciones de cada colaborador.
+
+Se han sugerido varias soluciones, como que las claves privadas y los cálculos del operador se realicen dentro de un entorno informático de confianza o un aislamiento del operador similar al de Wallfacer. Pero la mayoría simplemente posponen el problema de la confianza.
+
+Token único
+Para simplificar el contrato, el zk-SNARK y la interfaz de usuario, clr.fund selecciona un token ERC20 como su token nativo (establecido por el propietario del contrato), que es el único token con el que interactúa el contrato de la ronda de financiación. Esto supone un problema dado nuestro objetivo de ser independientes de la fuente de financiación.
+
+Por ejemplo, la financiación de las recompensas por bloque se realizaría en ETH, mientras que muchos usuarios podrían querer contribuir con DAI u otros tokens ERC20.
+
+En una versión futura, planeamos solucionar esto canalizando las contribuciones de ETH y tokens, en cualquier formato que no sea el token nativo actual, a través de un DEX como UniSwap .
+
+Documentación
+Ejecutando una instancia de clr.fund
+Proporcionar fondos de contrapartida
+Cómo realizar el recuento de votos
+Cómo verificar los resultados
+Ejecutando el subgrafo
+Despliegue
+Desarrollo
+Instalar Node v12 con nvm
+nvm install 12
+nvm use 12
+Si utiliza el chip M1 en productos Apple, necesita usar Node v16.
+
+nvm install 16
+nvm use 16
+Instalar las dependencias
+yarn
+
+# Along with the dependencies, git hooks are also installed. At the end of the installation, you will see the following line after a successful setup.
+husky - Git hooks installed
+Copiar entorno para contratos
+cp contracts/.env.example contracts/.env    # adjust if necessary
+Copiar el entorno para la aplicación web
+cp vue-app/.env.example vue-app/.env    # adjust if necessary
+Inicia la aplicación frontend en modo de desarrollo (recarga de código en caliente, informes de errores, etc.).
+En una terminal, inicie el nodo del casco
+
+yarn start:node
+En una segunda terminal tendrás que ejecutar tu nodo gráfico (más información aquí ).
+
+# go to the thegraph repo directory and init the node
+cd graph-node/docker
+docker-compose up
+Y finalmente, en una tercera terminal
+
+# this will complie and deploy the contracts + deploy the subgraph + build and run the vue app
+yarn start:dev
+Otros scripts útiles
+Recopilar los contratos
+yarn build:contracts
+Ejecutar pruebas unitarias
+yarn test
+Inicie el frontend sin una cadena de bloques local.
+yarn start:web
+Analizar los archivos
+yarn lint
+Ganchos de Git
+Pre-compromiso
+Prettier se ejecuta en los archivos preparados para mantener un estilo de formato coherente en todo el código fuente.
+
+Pre-empuje
+yarn test:formaty yarn test:webse activará para garantizar que el código esté en buen estado.
+
+Como puede ver, solo estamos comprobando las pruebas web (/vue-app) y no las de contratos. Esto se debe a que no hay cambios muy frecuentes en la carpeta /contracts. Sin embargo, si realiza algún cambio en /contracts, no olvide ejecutar yarn testo yarn test:contracts.
+
+Recursos de pila tecnológica
+/contracts
+Casco de seguridad
+Zeppelin abierto
+/vue-app
+Vuex
+Componente de clase Vue
+Vuelidate
+Modal de Vue.js
+Éteres
+Pistola
+Código de Visual Studio
+Como recomendación, usa la extensión Vetur . Ofrece funciones útiles para Vue, como resaltado de sintaxis, autocompletado, etc.
+
+Crea un vetur.config.jsarchivo en la raíz del proyecto con el siguiente contenido:
+
+/** @type {import('vls').VeturConfig} */
+module.exports = {
+  settings: {
+    'vetur.useWorkspaceDependencies': true,
+  },
+  projects: [
+    {
+      root: './vue-app',
+      package: './package.json',
+      tsconfig: './tsconfig.json',
+      globalComponents: ['./src/components/**/*.vue'],
+    },
+  ],
+}
+Acerca de
+Proyecto Eth2 CLR construido sobre clr.fund
+
+eth2clrfund.netlify.app/
+Recursos
+ Léame
+Licencia
+ Licencia GPL-3.0
+Contribuyendo
+ Contribuyendo
+ Actividad
+ Propiedades personalizadas
+Estrellas
+ 34 estrellas
+Vigilantes
+ 6 personas mirando
+Horquillas
+ 17 horquillas
+Repositorio de informes
+Lanzamientos
+ 7 etiquetas
+Paquetes
+No se han publicado paquetes
+Colaboradores
+Ningún colaborador
+Idiomas
+Mecanografiado
+55,0%
+ 
+Vista
+31,8%
+ 
+Solidez
+12,3%
+ 
+SCSS
+0,4%
+ 
+JavaScript
+0,3%
+ 
+Caparazón
+0,2%
+Pie de página
+© 2026 GitHub, Inc.
+Navegación del pie de página
+Términos
+Privacidad
+Seguridad
+Estado
+Comunidad
+Documentos
+Contacto
+Gestionar cookies
+No compartas mi información personal
